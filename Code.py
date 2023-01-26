@@ -11,13 +11,15 @@ cam= cv.VideoCapture(cam_port)
 
 while(True):
    result, image = cam.read()
-   #image = (image * 255).round().astype(np.uint8)
-   resized_image= cv.resize(image, (32,32))
-   img_batch=np.expand_dims(resized_image, axis=0)
-   prediction = model.predict(img_batch)
-   print(prediction) 
+   imagenew = cv.resize(image, (32, 32))
+   imagenew=np.expand_dims(imagenew, axis=0)
+   np_X = np.array(imagenew)
+   normalised_X = np_X.astype('float32')/255.0
+   prediction = model.predict(normalised_X)
+   label = tf.math.argmax(prediction, axis=1)
+   print(label) 
    if result:
-      cv.imshow("test",resized_image)
+      cv.imshow("test",image)
       cv.waitKey(0)
       cv.destroyWindow("test")
    else:
